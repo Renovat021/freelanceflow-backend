@@ -1,12 +1,14 @@
 package com.example.freelanceflow.controller;
 
 import com.example.freelanceflow.entity.Contract;
+import com.example.freelanceflow.entity.ContractStatus;
 import com.example.freelanceflow.service.ContractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,6 +29,20 @@ public class ContractController {
     @GetMapping("/all")
     public ResponseEntity<List<Contract>> getAllContracts() {
         List<Contract> contractList = contractService.getAllContracts();
+        return new ResponseEntity<>(contractList, HttpStatus.OK);
+    }
+
+    @GetMapping("/by-status")
+    public ResponseEntity<List<Contract>> getContractsByStatus(@RequestParam ContractStatus status) {
+        List<Contract> contractList = contractService.getContractsByStatus(status);
+        return new ResponseEntity<>(contractList, HttpStatus.OK);
+    }
+
+    @GetMapping("/between")
+    public ResponseEntity<List<Contract>> getContractsBetween(@RequestParam String start, @RequestParam String end) {
+        LocalDate startDate = LocalDate.parse(start);
+        LocalDate endDate = LocalDate.parse(end);
+        List<Contract> contractList = contractService.getContractsBetween(startDate, endDate);
         return new ResponseEntity<>(contractList, HttpStatus.OK);
     }
 

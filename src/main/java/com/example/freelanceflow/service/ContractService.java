@@ -1,10 +1,12 @@
 package com.example.freelanceflow.service;
 
 import com.example.freelanceflow.entity.Contract;
+import com.example.freelanceflow.entity.ContractStatus;
 import com.example.freelanceflow.repository.ContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,6 +31,16 @@ public class ContractService {
     public Optional<Contract> getContractById(UUID id) {
         Optional<Contract> foundContract = contractRepository.findById(id);
         return foundContract;
+    }
+
+    public List<Contract> getContractsByStatus(ContractStatus status) {
+        List<Contract> contractList = contractRepository.findByStatusOrderByStartDateAsc(status);
+        return contractList;
+    }
+
+    public List<Contract> getContractsBetween(LocalDate start, LocalDate end) {
+        List<Contract> contractList = contractRepository.findByStartDateBetweenOrderByStartDateAsc(start, end);
+        return contractList;
     }
 
     public String updateContract(UUID id, Contract newContract) {

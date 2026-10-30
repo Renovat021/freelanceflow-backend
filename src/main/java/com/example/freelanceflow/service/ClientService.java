@@ -31,6 +31,11 @@ public class ClientService {
         return foundClient;
     }
 
+    public List<Client> getClientsByLastName(String lastName) {
+        List<Client> clientList = clientRepository.findByLastNameIgnoreCaseOrderByFirstNameAsc(lastName);
+        return clientList;
+    }
+
     public String updateClient(UUID id, Client newClient) {
         String message;
         Optional<Client> foundClient = clientRepository.findById(id);
