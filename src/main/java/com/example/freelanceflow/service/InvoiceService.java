@@ -46,4 +46,16 @@ public class InvoiceService {
         List<Invoice> invoiceList = invoiceRepository.findInvoicesOfClient(email);
         return invoiceList;
     }
+
+    public String deleteInvoice(UUID id) {
+        String message;
+        Optional<Invoice> foundInvoice = invoiceRepository.findById(id);
+        if (foundInvoice.isPresent()) {
+            invoiceRepository.deleteById(id);
+            message = "Invoice deleted successfully";
+        } else {
+            message = "The invoice with that id does not exist";
+        }
+        return message;
+    }
 }

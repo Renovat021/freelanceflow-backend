@@ -4,6 +4,7 @@ import com.example.freelanceflow.entity.Contract;
 import com.example.freelanceflow.entity.ContractStatus;
 import com.example.freelanceflow.entity.Freelancer;
 import com.example.freelanceflow.repository.ContractRepository;
+import com.example.freelanceflow.repository.InvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,9 @@ public class ContractService {
 
     @Autowired
     private ContractRepository contractRepository;
+
+    @Autowired
+    private InvoiceRepository invoiceRepository;
 
     public String saveContract(Contract contract) {
         String message;
@@ -109,8 +113,13 @@ public class ContractService {
         String message;
         Optional<Contract> foundContract = contractRepository.findById(id);
         if (foundContract.isPresent()) {
-            contractRepository.deleteById(id);
-            message = "Contract deleted successfully";
+            Contract contract = foundContract.get();
+            if (invoiceRepository.existsByContract(contract)) {
+                message = "That contract has invoices, delete them first";
+            } else {
+                contractRepository.deleteById(id);
+                message = "Contract deleted successfully";
+            }
         } else {
             message = "The contract with that id does not exist";
         }

@@ -34,4 +34,14 @@ public class InvoiceController {
         List<Invoice> invoiceList = invoiceService.getInvoicesOfClient(email);
         return new ResponseEntity<>(invoiceList, HttpStatus.OK);
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteInvoice(@PathVariable UUID id) {
+        String message = invoiceService.deleteInvoice(id);
+        if (message.equals("The invoice with that id does not exist")) {
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(message, HttpStatus.OK);
+        }
+    }
 }

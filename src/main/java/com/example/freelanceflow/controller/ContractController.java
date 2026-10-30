@@ -90,6 +90,8 @@ public class ContractController {
         String message = contractService.deleteContract(id);
         if (message.equals("The contract with that id does not exist")) {
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        } else if (message.equals("That contract has invoices, delete them first")) {
+            return new ResponseEntity<>(message, HttpStatus.CONFLICT);
         } else {
             return new ResponseEntity<>(message, HttpStatus.OK);
         }
