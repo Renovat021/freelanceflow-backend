@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,19 +19,45 @@ public class WorkspaceController {
     private WorkspaceService workspaceService;
 
     @PostMapping("/save")
-    public ResponseEntity<String> save(@RequestBody Workspace workspace) {
+    public ResponseEntity<String> saveWorkspace(@RequestBody Workspace workspace) {
         String message = workspaceService.saveWorkspace(workspace);
-        return ResponseEntity.status(HttpStatus.CREATED).body(message);
+        return new ResponseEntity<>(message, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Workspace>> getAllWorkspaces() {
+        List<Workspace> workspaceList = workspaceService.getAllWorkspaces();
+        return new ResponseEntity<>(workspaceList, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable UUID id) {
-        Optional<Workspace> workspace = workspaceService.getWorkspaceById(id);
-        if (workspace.isPresent()) {
-            return ResponseEntity.ok(workspace.get());
+    public ResponseEntity<?> getWorkspaceById(@PathVariable UUID id) {
+        Optional<Workspace> foundWorkspace = workspaceService.getWorkspaceById(id);
+        if (foundWorkspace.isPresent()) {
+            return new ResponseEntity<>(foundWorkspace.get(), HttpStatus.OK);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("The workspace with that id does not exist");
+            String message = "The workspace with that id does not exist";
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateWorkspace(@PathVariable UUID id, @RequestBody Workspace workspace) {
+        String message = workspaceService.updateWorkspace(id, workspace);
+        if (message.equals("The workspace with that id does not exist")) {
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(message, HttpStatus.OK);
+        }
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteWorkspace(@PathVariable UUID id) {
+        String message = workspaceService.deleteWorkspace(id);
+        if (message.equals("The workspace with that id does not exist")) {
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(message, HttpStatus.OK);
         }
     }
 }

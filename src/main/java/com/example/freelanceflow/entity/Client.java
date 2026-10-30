@@ -16,15 +16,13 @@ public class Client {
     private String lastName;
 
     @Column(unique = true)
-    private String email; // business key: no two clients can share it
+    private String email;
 
     private String company;
 
-    // Empty constructor (JPA needs it)
     public Client() {
     }
 
-    // Getters and setters
     public UUID getId() {
         return id;
     }

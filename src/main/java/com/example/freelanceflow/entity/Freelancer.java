@@ -19,11 +19,11 @@ public class Freelancer {
 
     private String email;
 
-    private String hourlyRate; // a String, not a number (this is the surprise in the paper)
+    private String hourlyRate;
 
     @ManyToOne
     @JoinColumn(name = "workspace_id")
-    private Workspace workspace; // can be null
+    private Workspace workspace;
 
     @ManyToMany
     @JoinTable(
@@ -33,11 +33,9 @@ public class Freelancer {
     )
     private List<Skill> skills = new ArrayList<>();
 
-    // Empty constructor (JPA needs it)
     public Freelancer() {
     }
 
-    // Getters and setters
     public UUID getId() {
         return id;
     }

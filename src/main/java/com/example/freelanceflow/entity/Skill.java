@@ -20,11 +20,9 @@ public class Skill {
     @ManyToMany(mappedBy = "skills")
     private List<Freelancer> freelancers = new ArrayList<>();
 
-    // Empty constructor (JPA needs it)
     public Skill() {
     }
 
-    // Getters and setters
     public UUID getId() {
         return id;
     }

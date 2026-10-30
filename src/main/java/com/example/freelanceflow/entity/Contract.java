@@ -29,11 +29,9 @@ public class Contract {
     @JoinColumn(name = "freelancer_id")
     private Freelancer freelancer;
 
-    // Empty constructor (JPA needs it)
     public Contract() {
     }
 
-    // Getters and setters
     public UUID getId() {
         return id;
     }
