@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -26,5 +27,11 @@ public class InvoiceController {
         } else {
             return new ResponseEntity<>(message, HttpStatus.CREATED);
         }
+    }
+
+    @GetMapping("/client/{email}")
+    public ResponseEntity<List<Invoice>> getInvoicesOfClient(@PathVariable String email) {
+        List<Invoice> invoiceList = invoiceService.getInvoicesOfClient(email);
+        return new ResponseEntity<>(invoiceList, HttpStatus.OK);
     }
 }

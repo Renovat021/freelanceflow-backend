@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -39,5 +40,10 @@ public class InvoiceService {
             message = "The contract with that id does not exist";
         }
         return message;
+    }
+
+    public List<Invoice> getInvoicesOfClient(String email) {
+        List<Invoice> invoiceList = invoiceRepository.findInvoicesOfClient(email);
+        return invoiceList;
     }
 }
