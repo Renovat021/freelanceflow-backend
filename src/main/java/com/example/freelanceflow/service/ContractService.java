@@ -62,6 +62,11 @@ public class ContractService {
         return contractList;
     }
 
+    public List<Object[]> getContractStats() {
+        List<Object[]> statsList = contractRepository.countContractsByStatus();
+        return statsList;
+    }
+
     public String updateContract(UUID id, Contract newContract) {
         String message;
         Optional<Contract> foundContract = contractRepository.findById(id);

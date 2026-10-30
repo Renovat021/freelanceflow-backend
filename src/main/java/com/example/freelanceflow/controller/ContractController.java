@@ -52,6 +52,12 @@ public class ContractController {
         return new ResponseEntity<>(contractList, HttpStatus.OK);
     }
 
+    @GetMapping("/stats/by-status")
+    public ResponseEntity<List<Object[]>> getContractStats() {
+        List<Object[]> statsList = contractService.getContractStats();
+        return new ResponseEntity<>(statsList, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getContractById(@PathVariable UUID id) {
         Optional<Contract> foundContract = contractService.getContractById(id);
