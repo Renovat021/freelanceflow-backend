@@ -31,6 +31,11 @@ public class WorkspaceService {
         return foundWorkspace;
     }
 
+    public List<Workspace> getFreeWorkspaces() {
+        List<Workspace> workspaceList = workspaceRepository.findFreeWorkspaces();
+        return workspaceList;
+    }
+
     public String updateWorkspace(UUID id, Workspace newWorkspace) {
         String message;
         Optional<Workspace> foundWorkspace = workspaceRepository.findById(id);

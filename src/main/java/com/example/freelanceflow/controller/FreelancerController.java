@@ -30,6 +30,12 @@ public class FreelancerController {
         return new ResponseEntity<>(freelancerList, HttpStatus.OK);
     }
 
+    @GetMapping("/by-skill")
+    public ResponseEntity<List<Freelancer>> getFreelancersBySkill(@RequestParam String name) {
+        List<Freelancer> freelancerList = freelancerService.getFreelancersBySkill(name);
+        return new ResponseEntity<>(freelancerList, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getFreelancerById(@PathVariable UUID id) {
         Optional<Freelancer> foundFreelancer = freelancerService.getFreelancerById(id);

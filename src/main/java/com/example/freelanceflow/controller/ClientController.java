@@ -1,7 +1,9 @@
 package com.example.freelanceflow.controller;
 
 import com.example.freelanceflow.entity.Client;
+import com.example.freelanceflow.entity.Freelancer;
 import com.example.freelanceflow.service.ClientService;
+import com.example.freelanceflow.service.FreelancerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,9 @@ public class ClientController {
 
     @Autowired
     private ClientService clientService;
+
+    @Autowired
+    private FreelancerService freelancerService;
 
     @PostMapping("/save")
     public ResponseEntity<String> saveClient(@RequestBody Client client) {
@@ -34,6 +39,18 @@ public class ClientController {
     public ResponseEntity<List<Client>> getClientsByLastName(@RequestParam String lastName) {
         List<Client> clientList = clientService.getClientsByLastName(lastName);
         return new ResponseEntity<>(clientList, HttpStatus.OK);
+    }
+
+    @GetMapping("/of-freelancer/{freelancerId}")
+    public ResponseEntity<?> getClientsOfFreelancer(@PathVariable UUID freelancerId) {
+        Optional<Freelancer> foundFreelancer = freelancerService.getFreelancerById(freelancerId);
+        if (foundFreelancer.isPresent()) {
+            List<Client> clientList = clientService.getClientsOfFreelancer(freelancerId);
+            return new ResponseEntity<>(clientList, HttpStatus.OK);
+        } else {
+            String message = "The freelancer with that id does not exist";
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/{id}")

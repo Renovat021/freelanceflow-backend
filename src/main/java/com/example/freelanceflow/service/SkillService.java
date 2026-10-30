@@ -31,6 +31,11 @@ public class SkillService {
         return foundSkill;
     }
 
+    public List<Skill> getUnusedSkills() {
+        List<Skill> skillList = skillRepository.findUnusedSkills();
+        return skillList;
+    }
+
     public String updateSkill(UUID id, Skill newSkill) {
         String message;
         Optional<Skill> foundSkill = skillRepository.findById(id);

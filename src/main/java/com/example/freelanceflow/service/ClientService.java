@@ -36,6 +36,11 @@ public class ClientService {
         return clientList;
     }
 
+    public List<Client> getClientsOfFreelancer(UUID freelancerId) {
+        List<Client> clientList = clientRepository.findClientsOfFreelancer(freelancerId);
+        return clientList;
+    }
+
     public String updateClient(UUID id, Client newClient) {
         String message;
         Optional<Client> foundClient = clientRepository.findById(id);

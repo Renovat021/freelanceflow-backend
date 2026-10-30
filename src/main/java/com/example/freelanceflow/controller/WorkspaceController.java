@@ -30,6 +30,12 @@ public class WorkspaceController {
         return new ResponseEntity<>(workspaceList, HttpStatus.OK);
     }
 
+    @GetMapping("/free")
+    public ResponseEntity<List<Workspace>> getFreeWorkspaces() {
+        List<Workspace> workspaceList = workspaceService.getFreeWorkspaces();
+        return new ResponseEntity<>(workspaceList, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getWorkspaceById(@PathVariable UUID id) {
         Optional<Workspace> foundWorkspace = workspaceService.getWorkspaceById(id);

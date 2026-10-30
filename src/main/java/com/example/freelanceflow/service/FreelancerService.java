@@ -31,6 +31,11 @@ public class FreelancerService {
         return foundFreelancer;
     }
 
+    public List<Freelancer> getFreelancersBySkill(String name) {
+        List<Freelancer> freelancerList = freelancerRepository.findFreelancersBySkillName(name);
+        return freelancerList;
+    }
+
     public String updateFreelancer(UUID id, Freelancer newFreelancer) {
         String message;
         Optional<Freelancer> foundFreelancer = freelancerRepository.findById(id);
