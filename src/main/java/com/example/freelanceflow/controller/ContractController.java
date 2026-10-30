@@ -23,7 +23,13 @@ public class ContractController {
     @PostMapping("/save")
     public ResponseEntity<String> saveContract(@RequestBody Contract contract) {
         String message = contractService.saveContract(contract);
-        return new ResponseEntity<>(message, HttpStatus.CREATED);
+        if (message.equals("Contract date cannot be in the past")) {
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        } else if (message.equals("Freelancer already has a contract starting on that date")) {
+            return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+        } else {
+            return new ResponseEntity<>(message, HttpStatus.CREATED);
+        }
     }
 
     @GetMapping("/all")
@@ -64,6 +70,18 @@ public class ContractController {
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(message, HttpStatus.OK);
+        }
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<String> updateStatus(@PathVariable UUID id, @RequestParam ContractStatus status) {
+        String message = contractService.updateStatus(id, status);
+        if (message.equals("The contract with that id does not exist")) {
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        } else if (message.equals("Contract status updated successfully")) {
+            return new ResponseEntity<>(message, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
     }
 

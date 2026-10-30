@@ -1,6 +1,7 @@
 package com.example.freelanceflow.repository;
 
 import com.example.freelanceflow.entity.Freelancer;
+import com.example.freelanceflow.entity.Workspace;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,4 +13,6 @@ public interface FreelancerRepository extends JpaRepository<Freelancer, UUID> {
 
     @Query("SELECT DISTINCT f FROM Freelancer f JOIN f.skills s WHERE LOWER(s.name) LIKE LOWER(CONCAT('%', :name, '%'))")
     List<Freelancer> findFreelancersBySkillName(@Param("name") String name);
+
+    boolean existsByWorkspace(Workspace workspace);
 }

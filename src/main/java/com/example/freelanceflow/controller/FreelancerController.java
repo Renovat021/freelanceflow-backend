@@ -57,6 +57,34 @@ public class FreelancerController {
         }
     }
 
+    @PutMapping("/{freelancerId}/skills/{skillId}")
+    public ResponseEntity<String> addSkillToFreelancer(@PathVariable UUID freelancerId, @PathVariable UUID skillId) {
+        String message = freelancerService.addSkillToFreelancer(freelancerId, skillId);
+        if (message.equals("The freelancer with that id does not exist")) {
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        } else if (message.equals("That skill does not exist")) {
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        } else if (message.equals("The freelancer already has that skill")) {
+            return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+        } else {
+            return new ResponseEntity<>(message, HttpStatus.OK);
+        }
+    }
+
+    @PatchMapping("/{freelancerId}/workspace")
+    public ResponseEntity<String> changeWorkspace(@PathVariable UUID freelancerId, @RequestParam int workspaceNumber) {
+        String message = freelancerService.changeWorkspace(freelancerId, workspaceNumber);
+        if (message.equals("The freelancer with that id does not exist")) {
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        } else if (message.equals("The workspace with that workspaceNumber does not exist")) {
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        } else if (message.equals("That workspace is taken by another freelancer")) {
+            return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+        } else {
+            return new ResponseEntity<>(message, HttpStatus.OK);
+        }
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteFreelancer(@PathVariable UUID id) {
         String message = freelancerService.deleteFreelancer(id);

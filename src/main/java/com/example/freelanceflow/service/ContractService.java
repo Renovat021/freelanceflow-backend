@@ -2,6 +2,7 @@ package com.example.freelanceflow.service;
 
 import com.example.freelanceflow.entity.Contract;
 import com.example.freelanceflow.entity.ContractStatus;
+import com.example.freelanceflow.entity.Freelancer;
 import com.example.freelanceflow.repository.ContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,22 @@ public class ContractService {
     private ContractRepository contractRepository;
 
     public String saveContract(Contract contract) {
-        contractRepository.save(contract);
-        String message = "Contract saved successfully";
+        String message;
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = contract.getStartDate();
+        if (startDate.isBefore(today)) {
+            message = "Contract date cannot be in the past";
+        } else {
+            Freelancer freelancer = contract.getFreelancer();
+            boolean alreadyHasContract = contractRepository.existsByFreelancerAndStartDateAndStatusNot(freelancer, startDate, ContractStatus.CANCELLED);
+            if (alreadyHasContract) {
+                message = "Freelancer already has a contract starting on that date";
+            } else {
+                contract.setStatus(ContractStatus.PROPOSED);
+                contractRepository.save(contract);
+                message = "Contract saved successfully";
+            }
+        }
         return message;
     }
 
@@ -49,13 +64,41 @@ public class ContractService {
         if (foundContract.isPresent()) {
             Contract contract = foundContract.get();
             contract.setStartDate(newContract.getStartDate());
-            contract.setStatus(newContract.getStatus());
             contract.setTitle(newContract.getTitle());
             contract.setBudget(newContract.getBudget());
             contract.setClient(newContract.getClient());
             contract.setFreelancer(newContract.getFreelancer());
             contractRepository.save(contract);
             message = "Contract updated successfully";
+        } else {
+            message = "The contract with that id does not exist";
+        }
+        return message;
+    }
+
+    public String updateStatus(UUID id, ContractStatus newStatus) {
+        String message;
+        Optional<Contract> foundContract = contractRepository.findById(id);
+        if (foundContract.isPresent()) {
+            Contract contract = foundContract.get();
+            ContractStatus currentStatus = contract.getStatus();
+            boolean allowed = false;
+            if (currentStatus == ContractStatus.PROPOSED) {
+                if (newStatus == ContractStatus.ACTIVE || newStatus == ContractStatus.CANCELLED) {
+                    allowed = true;
+                }
+            } else if (currentStatus == ContractStatus.ACTIVE) {
+                if (newStatus == ContractStatus.DELIVERED || newStatus == ContractStatus.CANCELLED) {
+                    allowed = true;
+                }
+            }
+            if (allowed) {
+                contract.setStatus(newStatus);
+                contractRepository.save(contract);
+                message = "Contract status updated successfully";
+            } else {
+                message = "Cannot change status from " + currentStatus + " to " + newStatus;
+            }
         } else {
             message = "The contract with that id does not exist";
         }
