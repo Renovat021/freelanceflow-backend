@@ -7,6 +7,7 @@ import com.example.freelanceflow.repository.ContractRepository;
 import com.example.freelanceflow.repository.InvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -111,6 +112,13 @@ public class ContractService {
         } else {
             message = "The contract with that id does not exist";
         }
+        return message;
+    }
+
+    @Transactional
+    public String cancelContractsOfDay(UUID freelancerId, LocalDate date) {
+        int result = contractRepository.cancelContractsOfDay(freelancerId, date);
+        String message = result + " contracts cancelled";
         return message;
     }
 

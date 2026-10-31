@@ -91,6 +91,13 @@ public class ContractController {
         }
     }
 
+    @PatchMapping("/cancel-day")
+    public ResponseEntity<String> cancelContractsOfDay(@RequestParam UUID freelancerId, @RequestParam String date) {
+        LocalDate startDate = LocalDate.parse(date);
+        String message = contractService.cancelContractsOfDay(freelancerId, startDate);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteContract(@PathVariable UUID id) {
         String message = contractService.deleteContract(id);
